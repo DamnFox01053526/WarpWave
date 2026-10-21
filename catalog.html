@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Каталог товаров WarpWave по мотивам Genshin Impact">
+    <title>Каталог — WarpWave</title>
+    <link rel="stylesheet" href="m_catalog.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="logo">
+            <a href="index.html" aria-label="WarpWave — главная">
+                <img src="image.png" width="100" height="100" alt="Логотип WarpWave">
+            </a>
+        </div>
+        <nav aria-label="Основная навигация">
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a class="active" href="catalog.html" aria-current="page">Каталог</a></li>
+                <li><a href="characters.html">Персонажи</a></li>
+                <li><a href="merch.html">Мерчандайз</a></li>
+                <li><a href="news.html">Новости</a></li>
+            </ul>
+        </nav>
+        <div class="cabinet-zone">
+            <a href="login.html" class="btn btn-login">Войти</a>
+            <a href="cart.html" class="btn btn-primary">🛒 Корзина <span class="cart-count" id="cartCount">0</span></a>
+        </div>
+    </header>
+
+    <main>
+        <section class="catalog-intro">
+            <div class="catalog-ornament">✦ ───────── ✦</div>
+            <h1>Каталог WarpWave</h1>
+            <p>Найди сокровища Тейвата — от коллекционного мерча до аксессуаров для настоящих путешественников.</p>
+        </section>
+
+        <section class="catalog-tools" aria-label="Поиск и сортировка">
+            <input id="searchInput" type="search" placeholder="🔎 Поиск товаров..." aria-label="Поиск товаров">
+            <select id="categorySelect" aria-label="Выбрать категорию">
+                <option value="all">Все категории</option>
+                <option value="Персонажи">Персонажи</option>
+                <option value="Аксессуары">Аксессуары</option>
+                <option value="Игрушки">Игрушки</option>
+                <option value="Канцелярия">Канцелярия</option>
+                <option value="Для геймеров">Для геймеров</option>
+            </select>
+            <select id="sortSelect" aria-label="Сортировка товаров">
+                <option value="popular">Сначала популярные</option>
+                <option value="price-asc">Сначала дешевле</option>
+                <option value="price-desc">Сначала дороже</option>
+                <option value="name">По названию</option>
+            </select>
+        </section>
+
+        <section class="catalog-layout">
+            <aside class="catalog-sidebar">
+                <h2>Категории</h2>
+                <div class="category-filter" id="categoryButtons">
+                    <button class="active" type="button" data-category="all">✦ Все товары</button>
+                    <button type="button" data-category="Персонажи">Персонажи</button>
+                    <button type="button" data-category="Аксессуары">Аксессуары</button>
+                    <button type="button" data-category="Игрушки">Игрушки</button>
+                    <button type="button" data-category="Канцелярия">Канцелярия</button>
+                    <button type="button" data-category="Для геймеров">Для геймеров</button>
+                </div>
+                <h2>Цена, ₽</h2>
+                <div class="price-filter">
+                    <label>От
+                        <input id="minPrice" type="number" min="0" placeholder="0">
+                    </label>
+                    <label>До
+                        <input id="maxPrice" type="number" min="0" placeholder="5000">
+                    </label>
+                </div>
+                <button class="reset-filter" id="resetFilters" type="button">Сбросить фильтры</button>
+            </aside>
+
+            <div class="catalog-results">
+                <div class="catalog-results-top">
+                    <span id="resultsCount" aria-live="polite">Найдено товаров: 12</span>
+                    <span>✨ Выбери что-нибудь особенное</span>
+                </div>
+                <div class="catalog-grid" id="productGrid"></div>
+            </div>
+        </section>
+
+        <section class="promo">
+            <div>
+                <span class="promo-label">СОБЕРИ СВОЮ КОЛЛЕКЦИЮ</span>
+                <h2>Маленькие сокровища Тейвата</h2>
+                <p>Выбирай любимых персонажей и находи вещи, которые вдохновляют на новые приключения.</p>
+                <a href="merch.html" class="promo-button">Смотреть мерч →</a>
+            </div>
+            <div class="discount">
+                <small>Мир</small>
+                <strong>∞</strong>
+                <small>возможностей</small>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-brand">
+            <div class="footer-logo">✦ WARPWAVE</div>
+            <small>ТВОЙ МИР — ТВОИ ПРАВИЛА</small>
+        </div>
+        <div class="footer-info">
+            <p>Магазин коллекционных товаров и мерча по мотивам Genshin Impact.</p>
+            <p>Поддержка: support@warpwave.ru</p>
+        </div>
+        <div class="social">
+            <span>Мы в соцсетях</span>
+            <div>VK&nbsp;&nbsp; TG&nbsp;&nbsp; DC</div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 WarpWave. Все права защищены.</span>
+            <span>Политика конфиденциальности | Условия использования</span>
+        </div>
+    </footer>
+
+    <div class="catalog-notice" id="notice" role="status" hidden></div>
+
+    <script>
+    const products = [
+        { id: 1, name: "Акриловый стенд с персонажем", category: "Персонажи", description: "Декоративный стенд для коллекции", price: 590, popularity: 10, tag: "Хит", image: "images/character-stand.jpg" },
+        { id: 2, name: "Коллекционная фигурка", category: "Персонажи", description: "Фигурка для полки или рабочего стола", price: 2490, popularity: 9, tag: "Популярное", image: "images/figure.jpg" },
+        { id: 3, name: "Набор карточек персонажей", category: "Персонажи", description: "Набор коллекционных карточек", price: 450, popularity: 7, image: "images/character-cards.jpg" },
+        { id: 4, name: "Подвеска «Глаз Бога»", category: "Аксессуары", description: "Подвеска с символикой стихий", price: 790, popularity: 9, tag: "Хит", image: "images/vision-pendant.jpg" },
+        { id: 5, name: "Брелок с Паймон", category: "Аксессуары", description: "Маленький спутник для ключей или сумки", price: 350, popularity: 8, image: "images/paimon-keychain.jpg" },
+        { id: 6, name: "Набор значков", category: "Аксессуары", description: "Значки для рюкзака и одежды", price: 490, popularity: 6, image: "images/pins.jpg" },
+        { id: 7, name: "Мягкая игрушка-слайм", category: "Игрушки", description: "Мягкая игрушка для коллекции", price: 990, popularity: 8, tag: "Новинка", image: "images/slime-plush.jpg" },
+        { id: 8, name: "Подушка с принтом", category: "Игрушки", description: "Декоративная подушка в игровом стиле", price: 1490, popularity: 5, image: "images/pillow.jpg" },
+        { id: 9, name: "Блокнот путешественника", category: "Канцелярия", description: "Для заметок и планов на приключения", price: 390, popularity: 7, image: "images/notebook.jpg" },
+        { id: 10, name: "Набор стикеров", category: "Канцелярия", description: "Украшения для ноутбука и блокнота", price: 250, popularity: 6, image: "images/stickers.jpg" },
+        { id: 11, name: "Коврик для мыши", category: "Для геймеров", description: "Декор для игрового рабочего места", price: 1290, popularity: 9, tag: "Хит", image: "images/mousepad.jpg" },
+        { id: 12, name: "Чехол для телефона", category: "Для геймеров", description: "Аксессуар с тематическим оформлением", price: 890, popularity: 5, image: "images/phone-case.jpg" }
+    ];
+
+    const productGrid = document.getElementById("productGrid");
+    const searchInput = document.getElementById("searchInput");
+    const categorySelect = document.getElementById("categorySelect");
+    const sortSelect = document.getElementById("sortSelect");
+    const minPrice = document.getElementById("minPrice");
+    const maxPrice = document.getElementById("maxPrice");
+    const resultsCount = document.getElementById("resultsCount");
+    const notice = document.getElementById("notice");
+
+    const getStored = (key) => {
+        try { return JSON.parse(localStorage.getItem(key) || "[]"); }
+        catch { return []; }
+    };
+    let cart = getStored("warpwaveCart");
+    let favorites = getStored("warpwaveFavorites");
+    let noticeTimer;
+
+    function showNotice(message) {
+        notice.textContent = message;
+        notice.hidden = false;
+        clearTimeout(noticeTimer);
+        noticeTimer = setTimeout(() => { notice.hidden = true; }, 2300);
+    }
+    function saveState() {
+        localStorage.setItem("warpwaveCart", JSON.stringify(cart));
+        localStorage.setItem("warpwaveFavorites", JSON.stringify(favorites));
+        updateCartCount();
+    }
+    function updateCartCount() {
+        document.getElementById("cartCount").textContent =
+            cart.reduce((sum, item) => sum + item.quantity, 0);
+    }
+    function addToCart(id) {
+        const existing = cart.find(item => item.id === id);
+        if (existing) existing.quantity += 1;
+        else cart.push({ id, quantity: 1 });
+        saveState();
+        showNotice("Товар добавлен в корзину!");
+    }
+    function toggleFavorite(id) {
+        if (favorites.includes(id)) {
+            favorites = favorites.filter(item => item !== id);
+            showNotice("Удалено из избранного");
+        } else {
+            favorites.push(id);
+            showNotice("Добавлено в избранное!");
+        }
+        saveState();
+        renderProducts();
+    }
+    function renderProducts() {
+        const query = searchInput.value.trim().toLocaleLowerCase("ru");
+        const category = categorySelect.value;
+        const min = minPrice.value === "" ? 0 : Number(minPrice.value);
+        const max = maxPrice.value === "" ? Infinity : Number(maxPrice.value);
+
+        let filtered = products.filter(product => {
+            const matchesQuery = (product.name + " " + product.description + " " + product.category)
+                .toLocaleLowerCase("ru").includes(query);
+            const matchesCategory = category === "all" || product.category === category;
+            const matchesPrice = product.price >= min && product.price <= max;
+            return matchesQuery && matchesCategory && matchesPrice;
+        });
+
+        if (sortSelect.value === "price-asc") filtered.sort((a, b) => a.price - b.price);
+        else if (sortSelect.value === "price-desc") filtered.sort((a, b) => b.price - a.price);
+        else if (sortSelect.value === "name") filtered.sort((a, b) => a.name.localeCompare(b.name, "ru"));
+        else filtered.sort((a, b) => b.popularity - a.popularity);
+
+        resultsCount.textContent = "Найдено товаров: " + filtered.length;
+        productGrid.innerHTML = "";
+
+        if (!filtered.length) {
+            productGrid.innerHTML = '<div class="catalog-empty"><strong>Ничего не найдено</strong>Попробуй изменить запрос или сбросить фильтры.</div>';
+            return;
+        }
+
+        filtered.forEach(product => {
+            const isFavorite = favorites.includes(product.id);
+            const card = document.createElement("article");
+            card.className = "product-card catalog-product";
+            card.innerHTML = `
+                <div class="product-image">
+                    <img src="${product.image}" alt="${product.name}" loading="lazy"
+                         onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg,#e8dfcc,#c7d0c5)';">
+                    ${product.tag ? `<span class="product-tag">${product.tag}</span>` : ""}
+                </div>
+                <div class="product-info">
+                    <div class="product-category">${product.category}</div>
+                    <h3>${product.name}</h3>
+                    <p class="product-description">${product.description}</p>
+                    <strong>${product.price.toLocaleString("ru-RU")} ₽</strong>
+                    <div class="product-actions">
+                        <button class="buy-button" type="button" data-add="${product.id}">🛒 В корзину</button>
+                        <button class="favorite-button ${isFavorite ? "active" : ""}" type="button"
+                                data-favorite="${product.id}" aria-label="${isFavorite ? "Убрать из избранного" : "В избранное"}">${isFavorite ? "♥" : "♡"}</button>
+                    </div>
+                </div>`;
+            productGrid.appendChild(card);
+        });
+    }
+
+    document.getElementById("categoryButtons").addEventListener("click", event => {
+        const button = event.target.closest("button[data-category]");
+        if (!button) return;
+        categorySelect.value = button.dataset.category;
+        document.querySelectorAll("#categoryButtons button").forEach(item =>
+            item.classList.toggle("active", item === button));
+        renderProducts();
+    });
+    categorySelect.addEventListener("change", () => {
+        document.querySelectorAll("#categoryButtons button").forEach(button =>
+            button.classList.toggle("active", button.dataset.category === categorySelect.value));
+        renderProducts();
+    });
+    [searchInput, sortSelect, minPrice, maxPrice].forEach(element =>
+        element.addEventListener("input", renderProducts));
+    sortSelect.addEventListener("change", renderProducts);
+    document.getElementById("resetFilters").addEventListener("click", () => {
+        searchInput.value = "";
+        categorySelect.value = "all";
+        sortSelect.value = "popular";
+        minPrice.value = "";
+        maxPrice.value = "";
+        document.querySelectorAll("#categoryButtons button").forEach(button =>
+            button.classList.toggle("active", button.dataset.category === "all"));
+        renderProducts();
+    });
+    productGrid.addEventListener("click", event => {
+        const addButton = event.target.closest("[data-add]");
+        const favoriteButton = event.target.closest("[data-favorite]");
+        if (addButton) addToCart(Number(addButton.dataset.add));
+        if (favoriteButton) toggleFavorite(Number(favoriteButton.dataset.favorite));
+    });
+
+    updateCartCount();
+    renderProducts();
+    </script>
+</body>
+</html>
